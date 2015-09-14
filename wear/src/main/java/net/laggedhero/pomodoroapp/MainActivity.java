@@ -3,11 +3,11 @@ package net.laggedhero.pomodoroapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
-import android.widget.TextView;
+import android.support.wearable.view.WearableListView;
 
 public class MainActivity extends Activity {
 
-    private TextView mTextView;
+    private WearableListView taskList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,8 +17,21 @@ public class MainActivity extends Activity {
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.text);
+                taskList = (WearableListView) stub.findViewById(R.id.task_list);
+
+                setUpViewData();
             }
         });
+    }
+
+    private void setUpViewData() {
+        // an adapter
+        // with some items
+        // list them
+        // be happy
+    }
+
+    private boolean isFirstRun() {
+        return false;
     }
 }
