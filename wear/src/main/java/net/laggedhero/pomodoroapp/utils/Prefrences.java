@@ -15,6 +15,12 @@ public class Prefrences {
         return getPreferences(context).getBoolean(FIRST_RUN, true);
     }
 
+    public static void markFirstRunDone(Context context) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putBoolean(FIRST_RUN, false);
+        editor.apply();
+    }
+
     private static SharedPreferences getPreferences(Context context) {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
