@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="net.laggedhero.pomodoroapp"
+            android:exported="false"
+            android:name=".persistence.PomodoroAppProvider" />
     </application>
 
 </manifest>
