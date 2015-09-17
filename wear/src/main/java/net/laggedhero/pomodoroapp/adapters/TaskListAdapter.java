@@ -1,6 +1,9 @@
 package net.laggedhero.pomodoroapp.adapters;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.wearable.view.WearableListView;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 /**
@@ -8,6 +11,20 @@ import android.view.ViewGroup;
  */
 public class TaskListAdapter extends WearableListView.Adapter {
 
+    private Cursor cursor;
+    private final Context context;
+    private final LayoutInflater inflater;
+
+    public TaskListAdapter(Context context) {
+        cursor = null;
+        this.context = context;
+        inflater = LayoutInflater.from(context);
+    }
+
+    public void swapCursor(Cursor cursor) {
+        this.cursor = cursor;
+        notifyDataSetChanged();
+    }
 
     @Override
     public WearableListView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -21,6 +38,10 @@ public class TaskListAdapter extends WearableListView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (cursor == null) {
+            return 0;
+        }
+
+        return cursor.getCount();
     }
 }

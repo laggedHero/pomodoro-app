@@ -1,13 +1,22 @@
 package net.laggedhero.pomodoroapp;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 
-public class MainActivity extends Activity {
+import net.laggedhero.pomodoroapp.adapters.TaskListAdapter;
+import net.laggedhero.pomodoroapp.persistence.PomodoroAppContract;
+
+public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
+    private final static int LOADER_ID = 1;
 
     private WearableListView taskList;
+    private TaskListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +34,53 @@ public class MainActivity extends Activity {
     }
 
     private void setUpViewData() {
-        // an adapter
-        // with some items
-        // list them
-        // be happy
+        adapter = new TaskListAdapter(this);
+
+        taskList.setAdapter(adapter);
+
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
-    private boolean isFirstRun() {
-        return false;
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case LOADER_ID:
+                return onCreateTaskLoader();
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Cursor cursor) {
+        switch (loader.getId()) {
+            case LOADER_ID:
+                adapter.swapCursor(cursor);
+                break;
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+        switch (loader.getId()) {
+            case LOADER_ID:
+                adapter.swapCursor(null);
+                break;
+        }
+    }
+
+    public Loader<Cursor> onCreateTaskLoader() {
+        String[] projection = {
+                PomodoroAppContract.Tasks.COLUMN_TITLE
+        };
+
+        return new CursorLoader(
+                this,
+                PomodoroAppContract.Tasks.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+        );
     }
 }
