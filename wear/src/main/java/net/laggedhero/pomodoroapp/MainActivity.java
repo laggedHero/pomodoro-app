@@ -2,18 +2,24 @@ package net.laggedhero.pomodoroapp;
 
 import android.app.Activity;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 
 import net.laggedhero.pomodoroapp.adapters.TaskListAdapter;
 import net.laggedhero.pomodoroapp.persistence.PomodoroAppContract;
 
+import java.util.List;
+
 public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
-    private final static int LOADER_ID = 1;
+    private static final int SPEECH_REQUEST_CODE = 0;
+    private static final int LOADER_ID = 1;
 
     private WearableListView taskList;
     private TaskListAdapter adapter;
@@ -37,6 +43,17 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         adapter = new TaskListAdapter(this);
 
         taskList.setAdapter(adapter);
+
+        taskList.setClickListener(new WearableListView.ClickListener() {
+            @Override
+            public void onClick(WearableListView.ViewHolder viewHolder) {
+                onPositionClicked((int) viewHolder.itemView.getTag());
+            }
+
+            @Override
+            public void onTopEmptyRegionClick() {
+            }
+        });
 
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
@@ -82,5 +99,43 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
                 null,
                 null
         );
+    }
+
+    private void onPositionClicked(int position) {
+        if (position == -1) {
+            openSpeechActivity();
+        } else {
+            openTimerActivity();
+        }
+    }
+
+    private void openSpeechActivity() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        );
+
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            saveNewTask(spokenText);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void openTimerActivity() {
+    }
+
+    private void saveNewTask(String task) {
+        ContentValues values = new ContentValues();
+        values.put(PomodoroAppContract.Tasks.COLUMN_TITLE, task);
+
+        getContentResolver().insert(PomodoroAppContract.Tasks.CONTENT_URI, values);
     }
 }

@@ -78,7 +78,7 @@ public class PomodoroAppContract {
         public static final Uri LIVE_FOLDER_URI = Uri.parse(SCHEME + AUTHORITY + PATH_LIVE_FOLDER);
 
 		/*
-		 * MIME type definitions
+         * MIME type definitions
 		 */
 
         /**
