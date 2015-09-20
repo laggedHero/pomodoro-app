@@ -18,10 +18,26 @@ public class TimerActivity extends Activity implements LoaderManager.LoaderCallb
 
     private TextView mTextView;
 
+    private int taskId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras == null || !extras.containsKey(TASK_ID)) {
+            // finish this
+            return;
+        }
+
+        taskId = extras.getInt(TASK_ID, -1);
+
+        if (taskId == -1) {
+            // finish this
+            return;
+        }
+
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
@@ -67,16 +83,21 @@ public class TimerActivity extends Activity implements LoaderManager.LoaderCallb
 
     public Loader<Cursor> onCreateTaskLoader() {
         String[] projection = {
-                PomodoroAppContract.Tasks.COLUMN_ID,
                 PomodoroAppContract.Tasks.COLUMN_TITLE
+        };
+
+        String selection = PomodoroAppContract.Tasks.COLUMN_ID + " = ?";
+
+        String[] selectionArgs = {
+                String.valueOf(taskId)
         };
 
         return new CursorLoader(
                 this,
                 PomodoroAppContract.Tasks.CONTENT_URI,
                 projection,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null
         );
     }
