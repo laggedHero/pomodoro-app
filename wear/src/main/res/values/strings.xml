@@ -3,4 +3,5 @@
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
     <string name="add_new">Add new</string>
+    <string name="title_activity_timer">TimerActivity</string>
 </resources>

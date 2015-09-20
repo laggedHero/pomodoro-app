@@ -22,6 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createFilesSync = "CREATE TABLE " + PomodoroAppContract.Tasks.TABLE_NAME + " ("
+                + PomodoroAppContract.Tasks.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + PomodoroAppContract.Tasks.COLUMN_TITLE + " TEXT"
                 + ");";
         db.execSQL(createFilesSync);

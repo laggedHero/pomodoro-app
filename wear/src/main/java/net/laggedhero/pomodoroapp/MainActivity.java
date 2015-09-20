@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         taskList.setClickListener(new WearableListView.ClickListener() {
             @Override
             public void onClick(WearableListView.ViewHolder viewHolder) {
-                onPositionClicked((int) viewHolder.itemView.getTag());
+                onTaskClicked((int) viewHolder.itemView.getTag());
             }
 
             @Override
@@ -88,6 +88,7 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
 
     public Loader<Cursor> onCreateTaskLoader() {
         String[] projection = {
+                PomodoroAppContract.Tasks.COLUMN_ID,
                 PomodoroAppContract.Tasks.COLUMN_TITLE
         };
 
@@ -101,11 +102,11 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         );
     }
 
-    private void onPositionClicked(int position) {
-        if (position == -1) {
+    private void onTaskClicked(int taskId) {
+        if (taskId == -1) {
             openSpeechActivity();
         } else {
-            openTimerActivity();
+            openTimerActivity(taskId);
         }
     }
 
@@ -129,7 +130,10 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void openTimerActivity() {
+    private void openTimerActivity(int taskId) {
+        Intent intent = new Intent(this, TimerActivity.class);
+        intent.putExtra(TimerActivity.TASK_ID, taskId);
+        startActivity(intent);
     }
 
     private void saveNewTask(String task) {

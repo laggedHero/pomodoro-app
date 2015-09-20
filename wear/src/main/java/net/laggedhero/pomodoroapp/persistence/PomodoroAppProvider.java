@@ -32,6 +32,10 @@ public class PomodoroAppProvider extends ContentProvider {
 
         projectionMapTasks = new HashMap<>();
         projectionMapTasks.put(
+                PomodoroAppContract.Tasks.COLUMN_ID,
+                PomodoroAppContract.Tasks.COLUMN_ID
+        );
+        projectionMapTasks.put(
                 PomodoroAppContract.Tasks.COLUMN_TITLE,
                 PomodoroAppContract.Tasks.COLUMN_TITLE
         );

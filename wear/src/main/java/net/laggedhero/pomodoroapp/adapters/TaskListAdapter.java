@@ -39,12 +39,14 @@ public class TaskListAdapter extends WearableListView.Adapter {
 
         if (position == 0) {
             taskListItemHolder.textView.setText(R.string.add_new);
-            taskListItemHolder.itemView.setTag(position - 1);
+            taskListItemHolder.itemView.setTag(-1);
         } else if (cursor.moveToPosition(position - 1)) {
             taskListItemHolder.textView.setText(
                     cursor.getString(cursor.getColumnIndex(PomodoroAppContract.Tasks.COLUMN_TITLE))
             );
-            taskListItemHolder.itemView.setTag(position - 1);
+            taskListItemHolder.itemView.setTag(
+                    cursor.getInt(cursor.getColumnIndex(PomodoroAppContract.Tasks.COLUMN_ID))
+            );
         }
     }
 

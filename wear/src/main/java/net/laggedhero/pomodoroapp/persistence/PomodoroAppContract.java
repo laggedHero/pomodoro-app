@@ -93,6 +93,7 @@ public class PomodoroAppContract {
          */
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.laggedhero.pomodoroapp.tasks";
 
+        public static final String COLUMN_ID = "_id";
         public static final String COLUMN_TITLE = "title";
 
         /**
