@@ -16,7 +16,7 @@ public class TimerActivity extends Activity implements LoaderManager.LoaderCallb
 
     private static final int LOADER_ID = 1;
 
-    private TextView mTextView;
+    private TextView taskName;
 
     private int taskId;
 
@@ -42,7 +42,7 @@ public class TimerActivity extends Activity implements LoaderManager.LoaderCallb
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.text);
+                taskName = (TextView) stub.findViewById(R.id.task_name);
 
                 setUpViewData();
             }
@@ -51,6 +51,17 @@ public class TimerActivity extends Activity implements LoaderManager.LoaderCallb
 
     private void setUpViewData() {
         getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
+    private void setTask(Cursor cursor) {
+        if (cursor == null || !cursor.moveToFirst()) {
+            taskName.setText(null);
+            return;
+        }
+
+        taskName.setText(
+                cursor.getString(cursor.getColumnIndex(PomodoroAppContract.Tasks.COLUMN_TITLE))
+        );
     }
 
     @Override
@@ -67,7 +78,7 @@ public class TimerActivity extends Activity implements LoaderManager.LoaderCallb
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         switch (loader.getId()) {
             case LOADER_ID:
-                // data into view
+                setTask(cursor);
                 break;
         }
     }
@@ -76,7 +87,7 @@ public class TimerActivity extends Activity implements LoaderManager.LoaderCallb
     public void onLoaderReset(Loader<Cursor> loader) {
         switch (loader.getId()) {
             case LOADER_ID:
-                // data clean up
+                setTask(null);
                 break;
         }
     }
