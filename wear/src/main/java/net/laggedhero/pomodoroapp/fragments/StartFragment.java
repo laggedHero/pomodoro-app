@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.laggedhero.pomodoroapp.R;
+import net.laggedhero.pomodoroapp.TimerActivity;
 
 /**
  * Created by laggedhero on 9/21/15.
@@ -49,5 +50,12 @@ public class StartFragment extends Fragment {
         return view;
     }
 
-    private void setUpView() {}
+    private void setUpView() {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TimerActivity) getActivity()).onTaskStart();
+            }
+        });
+    }
 }

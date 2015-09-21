@@ -17,6 +17,7 @@ public class TimerActivity extends Activity {
     public static final String TASK_ID = "taskId";
 
     private GridViewPager gridViewPager;
+    private TimerFragmentGridPagerAdapter timerFragmentGridPagerAdapter;
 
     private int taskId;
 
@@ -50,8 +51,12 @@ public class TimerActivity extends Activity {
     }
 
     private void setUpViewData() {
-        gridViewPager.setAdapter(
-                new TimerFragmentGridPagerAdapter(getFragmentManager(), taskId)
-        );
+        timerFragmentGridPagerAdapter = new TimerFragmentGridPagerAdapter(getFragmentManager(), taskId);
+        gridViewPager.setAdapter(timerFragmentGridPagerAdapter);
+    }
+
+    public void onTaskStart() {
+        gridViewPager.scrollTo(0, 0);
+        timerFragmentGridPagerAdapter.startTask();
     }
 }
