@@ -12,6 +12,6 @@
         android:fontFamily="sans-serif-condensed-light"
         android:gravity="center"
         android:lineSpacingExtra="-4sp"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="16sp" />
 </net.laggedhero.pomodoroapp.widgets.WearableListItemLayout>

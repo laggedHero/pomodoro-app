@@ -5,7 +5,8 @@
     android:id="@+id/watch_view_stub"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:rectLayout="@layout/rect_activity_main"
-    app:roundLayout="@layout/round_activity_main"
-    tools:context=".MainActivity"
+    android:padding="5dp"
+    app:rectLayout="@layout/rect_fragment_timer"
+    app:roundLayout="@layout/round_fragment_timer"
+    tools:context="net.laggedhero.pomodoroapp.fragments.TimerFragment"
     tools:deviceIds="wear" />
