@@ -16,9 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.laggedhero.pomodoroapp.R;
+import net.laggedhero.pomodoroapp.notification.TaskTimeUpNotification;
 import net.laggedhero.pomodoroapp.persistence.PomodoroAppContract;
-
-import java.util.concurrent.TimeUnit;
+import net.laggedhero.pomodoroapp.providers.CircleDrawableProvider;
+import net.laggedhero.pomodoroapp.utils.StringFormatting;
 
 /**
  * Created by laggedhero on 9/21/15.
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class TimerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TASK_ID = "taskId";
 
-    private static final long TOTAL_TIME = 1500000; // 25 * 60 * 1000 = 25m
+    private static final long TOTAL_TIME = 10000; //1500000; // 25 * 60 * 1000 = 25m
     private static final long TIME_SLICE = 125000; // (25 * 60 * 1000) / 12
 
     private static final int LOADER_ID = 1;
@@ -45,7 +46,7 @@ public class TimerFragment extends Fragment implements LoaderManager.LoaderCallb
 
         @Override
         public void onFinish() {
-            // do something?
+            triggerTimeUpNotification();
         }
     };
 
@@ -92,7 +93,7 @@ public class TimerFragment extends Fragment implements LoaderManager.LoaderCallb
             return;
         }
 
-        taskTime.setText(milliSecondsToTimer(0));
+        taskTime.setText(StringFormatting.milliSecondsToTimer(0));
 
         taskName.setText(
                 cursor.getString(cursor.getColumnIndex(PomodoroAppContract.Tasks.COLUMN_TITLE))
@@ -153,49 +154,17 @@ public class TimerFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     private void updateTime(long millis) {
-        taskTime.setText(milliSecondsToTimer(millis));
-        taskCircle.setImageResource(getCircleResId(getCirclePos(millis)));
-    }
-
-    private String milliSecondsToTimer(long millis) {
-        return String.format("%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(millis),
-                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-        );
+        taskTime.setText(StringFormatting.milliSecondsToTimer(millis));
+        taskCircle.setImageResource(CircleDrawableProvider.getCircleResIdByPosition(getCirclePos(millis)));
     }
 
     private int getCirclePos(long millis) {
-        return  (int) (millis / TIME_SLICE);
+        return (int) (millis / TIME_SLICE);
     }
 
-    private int getCircleResId(int pos) {
-        switch (pos) {
-            case 1:
-                return R.drawable.circles_1;
-            case 2:
-                return R.drawable.circles_2;
-            case 3:
-                return R.drawable.circles_3;
-            case 4:
-                return R.drawable.circles_4;
-            case 5:
-                return R.drawable.circles_5;
-            case 6:
-                return R.drawable.circles_6;
-            case 7:
-                return R.drawable.circles_7;
-            case 8:
-                return R.drawable.circles_8;
-            case 9:
-                return R.drawable.circles_9;
-            case 10:
-                return R.drawable.circles_10;
-            case 11:
-                return R.drawable.circles_11;
-            case 12:
-                return R.drawable.circles_12;
-            default:
-                return R.drawable.circles_0;
-        }
+    private void triggerTimeUpNotification() {
+        TaskTimeUpNotification.triggerNew(
+                getActivity(), getString(R.string.times_up), getString(R.string.take_a_break_and_relax)
+        );
     }
 }
