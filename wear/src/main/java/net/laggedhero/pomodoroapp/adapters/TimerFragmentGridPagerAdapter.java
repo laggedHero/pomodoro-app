@@ -14,9 +14,6 @@ public class TimerFragmentGridPagerAdapter extends FragmentGridPagerAdapter {
 
     private final int taskId;
 
-    private TimerFragment timerFragment;
-    private StartFragment startFragment;
-
     private int columnCount;
 
     public TimerFragmentGridPagerAdapter(FragmentManager fm, int taskId) {
@@ -28,16 +25,16 @@ public class TimerFragmentGridPagerAdapter extends FragmentGridPagerAdapter {
     @Override
     public Fragment getFragment(int row, int column) {
         if (column == 0) {
-            if (timerFragment == null) {
-                timerFragment = TimerFragment.newInstance(taskId);
+            TimerFragment timerFragment = TimerFragment.newInstance(taskId);
+
+            if (columnCount == 1) {
+                timerFragment.startTaskTimer();
             }
+
             return timerFragment;
         }
 
-        if  (startFragment == null) {
-            startFragment = StartFragment.newInstance(taskId);
-        }
-        return startFragment;
+        return StartFragment.newInstance(taskId);
     }
 
     @Override
@@ -51,7 +48,6 @@ public class TimerFragmentGridPagerAdapter extends FragmentGridPagerAdapter {
     }
 
     public void startTask() {
-        timerFragment.startTaskTimer();
         columnCount = 1;
         notifyDataSetChanged();
     }

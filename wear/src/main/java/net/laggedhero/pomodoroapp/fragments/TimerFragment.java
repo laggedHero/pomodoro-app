@@ -27,7 +27,7 @@ import net.laggedhero.pomodoroapp.utils.StringFormatting;
 public class TimerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TASK_ID = "taskId";
 
-    private static final long TOTAL_TIME = 10000; //1500000; // 25 * 60 * 1000 = 25m
+    private static final long TOTAL_TIME = 1500000; // 25 * 60 * 1000 = 25m
     private static final long TIME_SLICE = 125000; // (25 * 60 * 1000) / 12
 
     private static final int LOADER_ID = 1;
@@ -81,6 +81,20 @@ public class TimerFragment extends Fragment implements LoaderManager.LoaderCallb
         });
 
         return view;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        countDownTimer.cancel();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        countDownTimer.cancel();
     }
 
     private void setUpViewData() {
